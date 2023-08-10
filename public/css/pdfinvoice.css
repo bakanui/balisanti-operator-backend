@@ -1,0 +1,77 @@
+@page { margin-top: 10px; margin-bottom: 10px; }
+
+.header, .footer {
+    width: 100%;
+    text-align: center;
+    position: fixed;
+}
+
+.header {
+    top: 0px;
+}
+
+.footer {
+    bottom: 0px;
+}
+
+.container {
+    margin-top: 120px;
+}
+
+.lunas {
+    text-align: center;
+    background-color: greenyellow;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+    line-height: 150%;
+    color: white;
+}
+
+.belumlunas {
+    text-align: center;
+    background-color: #FF6969;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+    line-height: 150%;
+    color: white;
+}
+
+.mt-2 {
+    margin-top: 15px;
+}
+
+table .no-border {
+    border: 0px;
+}
+
+.no-border tr > td {
+    width: 220px;
+}
+
+.font-robotoregular {
+    font-size: small;
+}
+
+.font-robotomedium {
+    font-size: medium;
+}
+
+.penumpang thead {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.penumpang thead > tr > th {
+    text-align: left;
+}
+
+.penumpang tbody > tr > td {
+    text-align: left;
+    padding-top: 5px;
+}
+
+.page-break {
+    page-break-after: always;
+}
