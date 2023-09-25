@@ -280,7 +280,7 @@ class PenjualanTiketController extends Controller
     public function cariJenisPenumpangJadwal(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_jadwal' => 'required|integer',
+            'id_jadwal' => 'required|string',
         ]);
         if($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], 400);
@@ -339,7 +339,7 @@ class PenjualanTiketController extends Controller
         $arrIdJenisTiket = array();
         foreach ($request->input('penumpangs') as $p) {
             $validator2 = Validator::make($p, [
-                'id_jenis_tiket' => 'required|integer',
+                'id_jenis_tiket' => 'required',
                 'nama_penumpang' => 'required|string',
                 'no_identitas' => 'required|string',
                 'jenis_kelamin' => 'required|string|max:1',

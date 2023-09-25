@@ -122,6 +122,7 @@ Route::prefix('master')->group(function() {
     
     Route::controller(JadwalTiketController::class)->prefix("jadwal-tiket")->group(function () {
         Route::get('', 'index');
+        Route::post('balisanti', 'store');
         Route::get('view/{id}', 'view')->middleware([CheckIfAdmin::class]);
         Route::post('', 'store')->middleware([CheckIfAdmin::class]);
         Route::put('', 'update')->middleware([CheckIfAdmin::class]);

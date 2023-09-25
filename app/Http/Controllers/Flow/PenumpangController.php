@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Flow;
 use App\Http\Controllers\Controller;
 use App\Models\TiketOrdered;
 use App\Models\JadwalJenispenumpang;
+use App\Models\Siwalatri\Penumpang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;

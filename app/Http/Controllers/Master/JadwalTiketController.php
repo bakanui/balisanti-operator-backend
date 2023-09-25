@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\JadwalTiket;
 use App\Models\JadwalJenispenumpang;
+use GuzzleHttp\Client;
 use Storage;
 
 class JadwalTiketController extends Controller
@@ -131,13 +132,15 @@ class JadwalTiketController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'jenis_jadwal' => 'required|string|max:100',
-            'id_kapal' => 'required|integer',
-            'id_nahkoda' => 'required|integer',
-            'id_rute' => 'required|integer',
+            'id_kapal' => 'required',
+            'id_nahkoda' => 'required',
+            'id_rute' => 'required',
+            'id_armada' => 'required',
             'waktu_berangkat' => 'required|string|max:5',
             'id_loket' => 'required|integer',
             'harga_tiket' => 'required|array',
             'status_jadwal' => 'required|integer|min:0|max:1',
+            'id' => 'required'
         ]);
         if($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], 400);
@@ -156,23 +159,25 @@ class JadwalTiketController extends Controller
         $arrHarga = $data['harga_tiket'];
         unset($data['harga_tiket']);
         $jadwal = new JadwalTiket;
+        $jadwal->id = $data['id'];
+        $jadwal->id_jadwal = $data['id'];
         $jadwal->jenis_jadwal = $data['jenis_jadwal'];
         $jadwal->id_kapal = $data['id_kapal'];
         $jadwal->id_nahkoda = $data['id_nahkoda'];
         $jadwal->id_rute = $data['id_rute'];
+        $jadwal->id_armada = $data['id_armada'];
         $jadwal->waktu_berangkat = $data['waktu_berangkat'];
         $jadwal->id_loket = $data['id_loket'];
         $jadwal->status_jadwal = $data['status_jadwal'];
         $jadwal->save();
         $hargas = array_map(function ($e) use ($jadwal) {
-            $e['id_jadwal'] = $jadwal->id;
+            $e['id_jadwal'] = $jadwal->id_jadwal;
             $e['created_at'] = date('Y-m-d H:i:s');
             $e['updated_at'] = date('Y-m-d H:i:s');
             return $e;
         }, $arrHarga);
         JadwalJenispenumpang::insert($hargas);
         Log::channel('single')->info('Sukses menambahkan jadwal dan harga tiket oleh '.auth()->user()->name.'.', $validator->validated());
-
         return response()->json($this->getSingleWithChild($jadwal->id), 201);
     }
 
@@ -181,8 +186,8 @@ class JadwalTiketController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'jenis_jadwal' => 'required|string|max:100',
-            'id_kapal' => 'required|integer',
-            'id_nahkoda' => 'required|integer',
+            'id_kapal' => 'required',
+            'id_nahkoda' => 'required',
             'id_rute' => 'required|integer',
             'waktu_berangkat' => 'required|string|max:5',
             'id_loket' => 'required|integer',
