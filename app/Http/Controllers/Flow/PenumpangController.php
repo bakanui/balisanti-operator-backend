@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Flow;
 use App\Http\Controllers\Controller;
 use App\Models\TiketOrdered;
 use App\Models\JadwalJenispenumpang;
-use App\Models\Siwalatri\Penumpang;
+use App\Models\Penumpang;
+use App\Models\Siwalatri\Passengers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PenumpangController extends Controller
 {
@@ -39,6 +41,20 @@ class PenumpangController extends Controller
                     ->first();
                 if ($this->checkStatusBayar($tiket->no_invoice)) {
                     return response()->json(['message'=>'Pembatalan gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
+                }else{
+                    $del = Http::withHeaders(['Content-Type' => 'application/json'])->send('POST', 'http://maiharta.ddns.net:8888/api/logs/deletion', [
+                        'body' => json_encode([
+                            'id_invoice' => $request['kode_booking'],
+                        ])
+                    ]);
+                    if($del->status() == 400 || $del->status() == 500){
+                        $res = json_decode($del->getBody());
+                        if($res->message){
+                            return response()->json(['message'=>$res->message, 'response'=>$del->json()], 400);
+                        }else{
+                            return response()->json(['message'=>'Terjadi kesalahan jaringan. Mohon dicoba kembali.', 'response'=>$del->json()], 400);
+                        }
+                    }
                 }
             }
         }
@@ -380,8 +396,32 @@ class PenumpangController extends Controller
         $cnt_bayar = DB::table('pembayaran_invoice')->where('no_invoice', $no_invoice)->whereNull('deleted_at')->count();
         if ($cnt_bayar > 0) {
             return true;
+        }else{
+            $response = Http::withHeaders(['Content-Type' => 'application/json'])->send('POST', 'http://maiharta.ddns.net:8888/api/logs/delete', [
+                'body' => json_encode([
+                    'id_invoice' => $no_invoice,
+                ])
+            ]);
+            $callBPD = $response->json();
+            if ($callBPD > 0) {
+                return true;
+            }else{
+                return false;
+            }
         }
-        return false;
+    }
+
+    public function findByPhone(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'no_telepon' => 'required|string|max:100',
+        ]);
+        if($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 400);
+        }
+        $penumpang = Penumpang::where('no_telepon', $request['no_telepon'])->get();
+        return response()->json([$penumpang[0]], 200);
+
     }
 }
 

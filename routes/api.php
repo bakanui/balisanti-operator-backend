@@ -153,6 +153,11 @@ Route::prefix('master')->group(function() {
         Route::post('update', 'update')->middleware([CheckIfAdmin::class]);
         Route::delete('', 'delete')->middleware([CheckIfAdmin::class]);
     });
+
+    Route::controller(PenumpangController::class)->prefix("penumpang")->group(function () {
+        Route::get('', 'findByPhone')->middleware([CheckIfAdmin::class]);
+    });
+
 });
 
 Route::controller(PenjualanTiketController::class)->prefix('penjualan')->group(function () {
