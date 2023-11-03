@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Flow;
 
 use App\Http\Controllers\Controller;
 use App\Models\Agen;
+use App\Models\Penumpang;
 use App\Models\HargaService;
 use App\Models\JadwalJenispenumpang;
 use App\Models\TiketOrdered;
@@ -341,6 +342,7 @@ class PenjualanTiketController extends Controller
             $validator2 = Validator::make($p, [
                 'id_jenis_tiket' => 'required',
                 'nama_penumpang' => 'required|string',
+                'no_telepon' => 'required|string',
                 'no_identitas' => 'required|string',
                 'jenis_kelamin' => 'required|string|max:1',
                 'email' => 'required|email',
@@ -348,6 +350,25 @@ class PenjualanTiketController extends Controller
             if($validator2->fails()) {
                 return response()->json(['error'=>$validator2->errors()], 400);
             }
+            if(Penumpang::where('no_telepon', $p['no_telepon'])->exists()){
+                if(Penumpang::where('nama', $p['nama_penumpang'])->exists()){
+                    $message = "Success!";
+                }else{
+                    $message = "No. Telepon " . $p['no_telepon'] . " sudah digunakan oleh orang lain.";
+                    return response()->json(['error'=>$message], 400);
+                }
+            }else{
+                $penumpang = new Penumpang;
+ 
+                $penumpang->nama = $p['nama_penumpang'];
+                $penumpang->no_identitas = $p['no_identitas'];
+                $penumpang->jenis_kelamin = $p['jenis_kelamin'];
+                $penumpang->email = $p['email'];
+                $penumpang->no_telepon = $p['no_telepon'];
+        
+                $penumpang->save();
+            }
+
             array_push($arrIdJenisTiket, $p['id_jenis_tiket']);
         }
         $valid = $validator->validated();
