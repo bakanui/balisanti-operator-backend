@@ -39,15 +39,14 @@ class ManifestController extends Controller
                     'user_checker' => auth()->user()->name
                 ]);
                 Log::channel('single')->info('Manifest kedatangan berhasil oleh operator ['.auth()->user()->name.'].', $validator->validated());
-                return response()->json(['message' => 'Manifest berhasil.', 'status_manifest' => 1], 200);
             }
         }
         $data = DB::table('tiket_ordered')
                     ->select('id', 'nama_penumpang', 'tanggal', 'waktu_berangkat', 'dermaga_awal', 'dermaga_tujuan')
                     ->where('kode_booking', $request['kode_booking'])
                     ->first();
-        
-        return response()->json(['data' => $data], 200);
+        return response()->json(['message' => 'Manifest berhasil.', 'status_manifest' => 1, 'data' => $data], 200);
+        // return response()->json(['data' => $data], 200);
     }
 
     public function manifestBulk(Request $request) 

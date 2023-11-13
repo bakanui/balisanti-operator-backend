@@ -155,7 +155,7 @@ Route::prefix('master')->group(function() {
     });
 
     Route::controller(PenumpangController::class)->prefix("penumpang")->group(function () {
-        Route::get('', 'findByPhone')->middleware([CheckIfAdmin::class]);
+        Route::get('', 'findByPhone');
     });
 
 });

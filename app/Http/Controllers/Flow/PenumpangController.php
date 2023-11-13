@@ -39,21 +39,15 @@ class PenumpangController extends Controller
                 $tiket = DB::table('tiket_ordered')
                     ->where('kode_booking', $request['kode_booking'])
                     ->first();
-                if ($this->checkStatusBayar($tiket->no_invoice)) {
-                    return response()->json(['message'=>'Pembatalan gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
-                }else{
-                    $del = Http::withHeaders(['Content-Type' => 'application/json'])->send('POST', 'http://maiharta.ddns.net:8888/api/logs/deletion', [
-                        'body' => json_encode([
-                            'id_invoice' => $request['kode_booking'],
-                        ])
-                    ]);
-                    if($del->status() == 400 || $del->status() == 500){
-                        $res = json_decode($del->getBody());
-                        if($res->message){
-                            return response()->json(['message'=>$res->message, 'response'=>$del->json()], 400);
-                        }else{
-                            return response()->json(['message'=>'Terjadi kesalahan jaringan. Mohon dicoba kembali.', 'response'=>$del->json()], 400);
-                        }
+                if($request['payment'] !== "cash"){
+                    if ($this->checkStatusBayar($tiket->no_invoice)) {
+                        return response()->json(['message'=>'Pembatalan gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
+                    }else{
+                        $del = Http::withHeaders(['Content-Type' => 'application/json'])->send('POST', 'http://maiharta.ddns.net:8888/api/logs/deletion', [
+                            'body' => json_encode([
+                                'id_invoice' => $request['kode_booking'],
+                            ])
+                        ]);
                     }
                 }
             }
@@ -121,13 +115,13 @@ class PenumpangController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'no_invoice' => 'required|string',
-            'id_agen' => 'required|integer|min:0',
-            'nama_perantara' => 'required|string',
-            'tambahan_harga' => 'required|decimal:0,11',
-            'id_service' => 'required|integer|min:0',
+            // 'id_agen' => 'required|integer|min:0',
+            // 'nama_perantara' => 'required|string',
+            // 'tambahan_harga' => 'required|decimal:0,11',
+            // 'id_service' => 'required|integer|min:0',
             'set_pp' => 'required|integer|min:0|max:1',
-            'update_rute_berangkat' => 'required|boolean',
-            'update_rute_pulang' => 'required|boolean',
+            // 'update_rute_berangkat' => 'required|boolean',
+            // 'update_rute_pulang' => 'required|boolean',
             'tanggal_berangkat' => 'date',
             'tanggal_pulang' => 'date',
             'id_jjp' => 'array',

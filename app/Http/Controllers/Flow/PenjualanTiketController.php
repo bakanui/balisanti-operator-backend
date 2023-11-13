@@ -350,14 +350,14 @@ class PenjualanTiketController extends Controller
             if($validator2->fails()) {
                 return response()->json(['error'=>$validator2->errors()], 400);
             }
-            if(Penumpang::where('no_telepon', $p['no_telepon'])->exists()){
-                if(Penumpang::where('nama', $p['nama_penumpang'])->exists()){
-                    $message = "Success!";
-                }else{
-                    $message = "No. Telepon " . $p['no_telepon'] . " sudah digunakan oleh orang lain.";
-                    return response()->json(['error'=>$message], 400);
-                }
-            }else{
+            // if(Penumpang::where('no_telepon', $p['no_telepon'])->exists()){
+            //     if(Penumpang::where('nama', $p['nama_penumpang'])->exists()){
+            //         $message = "Success!";
+            //     }else{
+            //         $message = "No. Telepon " . $p['no_telepon'] . " sudah digunakan oleh orang lain.";
+            //         return response()->json(['error'=>$message], 400);
+            //     }
+            // }else{
                 $penumpang = new Penumpang;
  
                 $penumpang->nama = $p['nama_penumpang'];
@@ -367,7 +367,7 @@ class PenjualanTiketController extends Controller
                 $penumpang->no_telepon = $p['no_telepon'];
         
                 $penumpang->save();
-            }
+            // }
 
             array_push($arrIdJenisTiket, $p['id_jenis_tiket']);
         }
@@ -438,11 +438,11 @@ class PenjualanTiketController extends Controller
             $v['total'] = $v['harga_tiket'];
             if (isset($agen) and !is_null($agen)) {
                 $v['id_agen'] = $agen->id;
-                if ($agen->jenis_diskon == 'persen') {
-                    $v['diskon_agen'] = $v['harga_tiket'] * $agen->nominal_diskon / 100;
-                } else {
-                    $v['diskon_agen'] = $agen->nominal_diskon;
-                }
+                // if ($agen->jenis_diskon == 'persen') {
+                    // $v['diskon_agen'] = $v['harga_tiket'] * $agen->nominal_diskon / 100;
+                // } else {
+                    $v['diskon_agen'] = $request['diskon_agen'];
+                // }
                 $v['total'] -= $v['diskon_agen'];
             }
             if (isset($service) and !is_null($service)) {
@@ -488,11 +488,11 @@ class PenjualanTiketController extends Controller
                 $v['total'] = $v['harga_tiket'];
                 if (isset($agen) and !is_null($agen)) {
                     $v['id_agen'] = $agen->id;
-                    if ($agen->jenis_diskon == 'persen') {
-                        $v['diskon_agen'] = $v['harga_tiket'] * $agen->nominal_diskon / 100;
-                    } else {
-                        $v['diskon_agen'] = $agen->nominal_diskon;
-                    }
+                    // if ($agen->jenis_diskon == 'persen') {
+                        // $v['diskon_agen'] = $v['harga_tiket'] * $agen->nominal_diskon / 100;
+                    // } else {
+                        $v['diskon_agen'] = $request['diskon_agen'];
+                    // }
                     $v['total'] -= $v['diskon_agen'];
                 }
                 if (isset($service) and !is_null($service)) {
@@ -590,7 +590,7 @@ class PenjualanTiketController extends Controller
             } else {
                 $data['bahasa'] = 'idn';
             }
-            // $appUrl = is_null(env('APP_URL')) ? 'https://backend.wahanavirendra.id' : env('APP_URL');
+            // $appUrl = is_null(env('APP_URL')) ? 'http://maiharta.ddns.net:3333' : env('APP_URL');
             $qr = QrCode::format('png')->size(200)->generate($data['kode_booking']);
             Storage::disk('public')->put('/img/qrcodes/'.$data['kode_booking'].'.png', $qr);
             Mail::to($data['email'])->send(new CreateOrderMail(collect($data)));

@@ -67,7 +67,7 @@ class PembayaranTiketController extends Controller
                     ->first();
         $collect = DB::table('collect')->where('no_invoice', $request['no_invoice'])->first();
         
-        $appUrl = is_null(env('APP_URL')) ? 'https://backend.wahanavirendra.id' : env('APP_URL');
+        $appUrl = is_null(env('APP_URL')) ? 'http://maiharta.ddns.net:3333' : env('APP_URL');
         $penumpang = DB::table('tiket_ordered as to')
                         ->select(
                             'jt.id as id_jadwal',
@@ -312,7 +312,7 @@ class PembayaranTiketController extends Controller
                     ->first();
         $collect = DB::table('collect')->where('no_invoice', $request['no_invoice'])->first();
         
-        $appUrl = is_null(env('APP_URL')) ? 'https://backend.wahanavirendra.id' : env('APP_URL');
+        $appUrl = is_null(env('APP_URL')) ? 'http://maiharta.ddns.net:3333' : env('APP_URL');
         $penumpang = DB::table('tiket_ordered as to')
                         ->select(
                             'kode_booking', 'nama_penumpang', 'no_identitas', 'jenis_kelamin', 'email',
@@ -431,7 +431,7 @@ class PembayaranTiketController extends Controller
         $agen = $this->separateByInvoice($agen);
         
         $collect = DB::table('collect')->whereIn('no_invoice', $request['no_invoice'])->get()->toArray();
-        $appUrl = is_null(env('APP_URL')) ? 'https://backend.wahanavirendra.id' : env('APP_URL');
+        $appUrl = is_null(env('APP_URL')) ? 'http://maiharta.ddns.net:3333' : env('APP_URL');
         $penumpang = DB::table('tiket_ordered as to')
                         ->select(
                             'to.no_invoice', 
