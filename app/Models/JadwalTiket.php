@@ -16,7 +16,7 @@ class JadwalTiket extends Model
 
     public function harga_tiket()
     {
-        return $this->hasMany('App\Models\JadwalJenispenumpang', 'id_jadwal', 'id');
+        return $this->hasMany('App\Models\JadwalJenispenumpang', 'id_jadwal', 'id_jadwal');
     }
 
     public function rute()

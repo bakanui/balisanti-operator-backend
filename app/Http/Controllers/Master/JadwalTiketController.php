@@ -26,8 +26,7 @@ class JadwalTiketController extends Controller
                 ->select('rute.id', 'rute.nama_rute', 'rute.id_dermaga_awal', 'rute.id_dermaga_tujuan', 'd1.nama_dermaga as nama_dermaga_awal', 'd2.nama_dermaga as nama_dermaga_tujuan');
             }])->with(['harga_tiket' => function($query) {
                 $query->join('jenis_penumpang as jp', 'jadwal_jenispenumpang.id_jenis_penumpang', 'jp.id')
-                    ->select('jadwal_jenispenumpang.*', 'jp.tipe as tipe_penumpang', 'jp.jenis as jenis_penumpang')
-                    ->get();
+                    ->select('jadwal_jenispenumpang.*', 'jp.tipe as tipe_penumpang', 'jp.jenis as jenis_penumpang');
             }])
             ->join('kapal as k', 'jadwal_tiket.id_kapal', 'k.id')
             ->join('nahkoda as n', 'jadwal_tiket.id_nahkoda', 'n.id')
