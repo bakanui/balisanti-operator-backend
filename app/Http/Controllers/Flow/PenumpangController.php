@@ -157,9 +157,11 @@ class PenumpangController extends Controller
         if ($request['update_rute_pulang'] and !isset($request['id_jjp_pulang'])) {
             return response()->json(['message'=>'Harap sertakan list id jadwal jenis penumpang kepulangan'], 400);
         }
-        
-        if ($this->checkStatusBayar($request['no_invoice'])) {
-            return response()->json(['message'=>'Edit gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
+        $tinvoice = TiketOrdered::where('no_invoice', $request['no_invoice'])->first();
+        if ($tinvoice->pembayaran !== "cash"){
+            if ($this->checkStatusBayar($request['no_invoice'])) {
+                return response()->json(['message'=>'Edit gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
+            }
         }
 
         DB::beginTransaction();
@@ -192,6 +194,16 @@ class PenumpangController extends Controller
             }
             if (isset($request['tanggal_pulang'])) {
                 DB::table('tiket_ordered')->where('no_invoice', $request['no_invoice'])->where('keterangan', 'RT')->update(['tanggal' => $request['tanggal_pulang']]);
+            }
+
+            if (isset($request['penumpang'])) {
+                $kode = preg_replace('/[^0-9]/','',$request['no_invoice']);
+                foreach ($request['penumpang'] as $penum) {
+                    $kode_booking = $kode . $loop->index + 1;
+                    $tpenum = TiketOrdered::where('kode_booking', $kode_booking)->first();
+                    $tpenum->nama_penumpang = $penum->nama;
+                    $tpenum->save();
+                }
             }
 
             $updates = [];
@@ -281,7 +293,7 @@ class PenumpangController extends Controller
 
         return response()->json([
             'message'=>'Edit invoice berhasil',
-            'tiket' => $tiket
+            'tiket' => $tiket,
         ], 200);
     }
 

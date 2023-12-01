@@ -54,5 +54,5 @@
         Terima kasih atas kepercayaan Anda dan selamat menikmati perjalanan!
     </p>
     <br>
-    <p>Salam hormat,<br>Wahana Virendra</p>
+    <p>Salam hormat,<br>Bali Santi</p>
 </div>

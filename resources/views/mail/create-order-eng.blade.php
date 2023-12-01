@@ -53,5 +53,5 @@
         Thank you for your trust in us and have a nice trip!
     </p>
     <br>
-    <p>Best regards,<br>Wahana Virendra</p>
+    <p>Best regards,<br>Bali Santi</p>
 </div>
