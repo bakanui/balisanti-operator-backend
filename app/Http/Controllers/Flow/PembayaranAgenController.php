@@ -371,7 +371,7 @@ class PembayaranAgenController extends Controller
                     ->leftJoin('agen as a', 'tiket_ordered.id_agen', 'a.id')
                     ->leftJoin('collect as c', 'c.no_invoice', 'tiket_ordered.no_invoice')
                     ->select(
-                        'tiket_ordered.kode_booking','tiket_ordered.no_invoice', 'nama_penumpang', 'tiket_ordered.email', 'jenis_kelamin', 'no_identitas',
+                        'tiket_ordered.kode_booking','tiket_ordered.no_invoice', 'nama_penumpang', 'tiket_ordered.email', 'd2.nama_dermaga AS tujuan', 'jenis_kelamin', 'no_identitas',
                         'tanggal', 'tiket_ordered.waktu_berangkat', DB::raw('IF(m.id IS NULL, "Belum Datang", IF(m.status_checker=1, "Sudah Datang", "Sudah Masuk")) AS status_manifest'),
                         'rl.id as id_created_by', 'u.name as created_by', DB::raw('IFNULL(a.nama_agen, "-") AS nama_agen'),
                         DB::raw('IF(tiket_ordered.id_service IS NULL, 0, 1) AS service'), 'tiket_ordered.flag_cancel', 

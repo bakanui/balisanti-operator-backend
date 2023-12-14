@@ -113,23 +113,23 @@ class PenumpangController extends Controller
 
     public function editInvoice(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'no_invoice' => 'required|string',
-            // 'id_agen' => 'required|integer|min:0',
-            // 'nama_perantara' => 'required|string',
-            // 'tambahan_harga' => 'required|decimal:0,11',
-            // 'id_service' => 'required|integer|min:0',
-            'set_pp' => 'required|integer|min:0|max:1',
-            // 'update_rute_berangkat' => 'required|boolean',
-            // 'update_rute_pulang' => 'required|boolean',
-            'tanggal_berangkat' => 'date',
-            'tanggal_pulang' => 'date',
-            'id_jjp' => 'array',
-            'id_jjp_pulang' => 'array',
-        ]);
-        if($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 400);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'no_invoice' => 'required|string',
+        //     // 'id_agen' => 'required|integer|min:0',
+        //     // 'nama_perantara' => 'required|string',
+        //     // 'tambahan_harga' => 'required|decimal:0,11',
+        //     // 'id_service' => 'required|integer|min:0',
+        //     'set_pp' => 'required|integer|min:0|max:1',
+        //     // 'update_rute_berangkat' => 'required|boolean',
+        //     // 'update_rute_pulang' => 'required|boolean',
+        //     'tanggal_berangkat' => 'date',
+        //     'tanggal_pulang' => 'date',
+        //     'id_jjp' => 'array',
+        //     'id_jjp_pulang' => 'array',
+        // ]);
+        // if($validator->fails()) {
+        //     return response()->json(['error'=>$validator->errors()], 400);
+        // }
         if (isset($request['id_jjp'])) {
             foreach ($request['id_jjp'] as $v) {
                 $validator2 = Validator::make($v, [
@@ -158,11 +158,11 @@ class PenumpangController extends Controller
             return response()->json(['message'=>'Harap sertakan list id jadwal jenis penumpang kepulangan'], 400);
         }
         $tinvoice = TiketOrdered::where('no_invoice', $request['no_invoice'])->first();
-        if ($tinvoice->pembayaran !== "cash"){
-            if ($this->checkStatusBayar($request['no_invoice'])) {
-                return response()->json(['message'=>'Edit gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
-            }
-        }
+        // if ($tinvoice->pembayaran !== "cash"){
+        //     if ($this->checkStatusBayar($request['no_invoice'])) {
+        //         return response()->json(['message'=>'Edit gagal. Invoice dari tiket terkait sudah menerima pembayaran'], 400);
+        //     }
+        // }
 
         DB::beginTransaction();
         try {
@@ -198,11 +198,13 @@ class PenumpangController extends Controller
 
             if (isset($request['penumpang'])) {
                 $kode = preg_replace('/[^0-9]/','',$request['no_invoice']);
+                $index = 1;
                 foreach ($request['penumpang'] as $penum) {
-                    $kode_booking = $kode . $loop->index + 1;
+                    $kode_booking = $kode . strval($index);
                     $tpenum = TiketOrdered::where('kode_booking', $kode_booking)->first();
-                    $tpenum->nama_penumpang = $penum->nama;
+                    $tpenum->nama_penumpang = $penum['nama'];
                     $tpenum->save();
+                    $index = $index + 1;
                 }
             }
 
@@ -294,6 +296,7 @@ class PenumpangController extends Controller
         return response()->json([
             'message'=>'Edit invoice berhasil',
             'tiket' => $tiket,
+            'request' => $request['no_invoice']
         ], 200);
     }
 

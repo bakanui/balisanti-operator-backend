@@ -527,7 +527,7 @@ class PenjualanTiketController extends Controller
         });
         
         Log::channel('single')->info('Penjualan tiket sukses oleh user ['.auth()->user()->name.'].', $validator->validated());
-        // $data['mail_responses'] = $mail_responses;
+        $data['mail_responses'] = $mail_responses;
 
         return response()->json($data, 201);
     }

@@ -92,7 +92,7 @@ class PembayaranTiketController extends Controller
                         ->get()->toArray();
 
         $arrHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November'];
+        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         $penumpang = array_map(function ($e) use ($arrHari, $arrBulan) {
             $temp = strtotime($e->tanggal);
             $hari = $arrHari[date('w', $temp)];
@@ -331,7 +331,7 @@ class PembayaranTiketController extends Controller
                         ->get()->toArray();
 
         $arrHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November'];
+        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         $penumpang = array_map(function ($e) use ($arrHari, $arrBulan) {
             $temp = strtotime($e->tanggal);
             $hari = $arrHari[date('w', $temp)];
@@ -451,7 +451,7 @@ class PembayaranTiketController extends Controller
                         ->get()->toArray();
         
         $arrHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November'];
+        $arrBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         $penumpang = array_map(function ($e) use ($arrHari, $arrBulan) {
             $temp = strtotime($e->tanggal);
             $hari = $arrHari[date('w', $temp)];
